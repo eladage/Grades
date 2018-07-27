@@ -20,6 +20,7 @@ namespace Grades
             float sum = 0;
             foreach(float grade in grades)
             {
+                //Instead of doing the following, we can use the Math Reference.
                 //if(grade > stats.HighestGrade)
                 //{
                 //    stats.HighestGrade = grade;
@@ -37,8 +38,25 @@ namespace Grades
         {
             grades.Add(grade);
         }
-        
 
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                {
+                    _name = value;
+                }
+            }
+        }
+
+        private string _name;
+        //List doesn't have a fixed size like an array. 
         private List<float> grades;
     }
 }
