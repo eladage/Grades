@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Text;
@@ -12,60 +13,58 @@ namespace Grades
         static void Main(string[] args)
         {
 
-            //SpeechSynthesizer synth = new SpeechSynthesizer();
-            //synth.Speak("Hello this is my program, is this shit working?");
-
             GradeBook book = new GradeBook();
+            GetBookName(book);
+            AddGrades(book);
+            SaveGrades(book);
+            WriteResults(book);
 
-            //using += to add multiple methods to single delegate
-            book.NameChanged += new NameChangedDelegate(OnNameChanged);
-            
-            //can also be expressed in a less verbose way
-            book.NameChanged += OnNameChanged2;
+        }
 
+        private static void WriteResults(GradeBook book)
+        {
+            GradeStatistics stats = book.ComputeStatistics();
+            Console.WriteLine($"GradeBook:\t{book.Name}");
+            WriteResult("Average\t", stats.AverageGrade);
+            WriteResult("Highest\t", stats.HighestGrade);
+            WriteResult("Lowest\t", stats.LowestGrade);
+            WriteResult("Grade\t", stats.LetterGrade, stats.Description);
+        }
 
-            //after setting NameChangedDelegate to event the following doesnt work
-            //can only be set on either side of +=/-=
-            //book.NameChanged = null;
+        private static void SaveGrades(GradeBook book)
+        {
+            using (StreamWriter outputFIle = File.CreateText("grades.txt"))
+            {
+                book.WriteGrades(outputFIle);
+            }
+        }
 
-            book.Name = "Eric's Grade Book";
-            book.Name = "Eric's Grade Book 2: Electric Boogaloo";
-
-            //calling name changed directly
-            //book.NameChanged("1","2");
-
-            book.AutoProperty = "this is an example of setting an auto property";
-            Console.WriteLine(book.AutoProperty);
-
-            //Because of the set; in Name property this following line is ignored.
-            book.Name = null;
-
+        private static void AddGrades(GradeBook book)
+        {
             book.AddGrade(91);
             book.AddGrade(89.5f);
             book.AddGrade(75);
-
-            GradeStatistics stats = book.ComputeStatistics();
-
-            Console.WriteLine(book.Name);
-            WriteResult("Average", stats.AverageGrade);
-            WriteResult("Highest", (int)stats.HighestGrade);
-            WriteResult("Lowest ", stats.LowestGrade);
-
-        }
-        
-        static void OnNameChanged(object sender, NameChangedEventArgs args)
-        {
-            Console.WriteLine($"Grade book changing name from {args.ExistingName} to {args.NewName}");
         }
 
-        static void OnNameChanged2(object sender, NameChangedEventArgs args)
+        private static void GetBookName(GradeBook book)
         {
-            Console.WriteLine("--------------------");
-        }
-
-        static void WriteResult(string description, int result)
-        {
-            Console.WriteLine(description + ":\t" + result);
+            try
+            {
+                Console.WriteLine("Enter a name");
+                book.Name = Console.ReadLine();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Something is screwed");
+            }
         }
 
         static void WriteResult(string description, float result)
@@ -76,7 +75,16 @@ namespace Grades
             Console.WriteLine($"{description}:\t{result:F2}");
         }
 
-        
+        static void WriteResult(string description, string letterGrade)
+        {
+            Console.WriteLine($"{description}:\t{letterGrade}");
+        }
+
+        static void WriteResult(string description, string letterGrade, string gradeComment)
+        {
+            Console.WriteLine($"{description}:\t{letterGrade}, {gradeComment}");
+        }
+
     }
 
 }
