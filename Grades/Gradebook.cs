@@ -11,6 +11,7 @@ namespace Grades
         public GradeBook()
         {
             grades = new List<float>();
+            _name = "empty";
         }
 
         public GradeStatistics ComputeStatistics()
@@ -25,6 +26,7 @@ namespace Grades
                 //{
                 //    stats.HighestGrade = grade;
                 //}
+
                 stats.HighestGrade = Math.Max(grade, stats.HighestGrade);
                 stats.LowestGrade = Math.Min(grade, stats.LowestGrade);
                 sum += grade;
@@ -39,24 +41,41 @@ namespace Grades
             grades.Add(grade);
         }
 
+        //property - used to set value to Name and to allow Program.cs to get value
         public string Name
         {
-            get
-            {
-                return _name;
-            }
-            
+            get { return _name; }
             set
             {
                 if (!String.IsNullOrEmpty(value))
                 {
+                    if(_name != value)
+                    {
+                        NameChangedEventArgs args = new NameChangedEventArgs();
+                        args.ExistingName = _name;
+                        args.NewName = value;
+
+                        NameChanged(this, args);
+                    }
                     _name = value;
                 }
             }
         }
 
+        //delegate is a variable that points to a method - changing to event below
+        //public NameChangedDelegate NameChanged;
+
+        public event NameChangedDelegate NameChanged;
+
+
+        //backing field for above property
         private string _name;
+
+        //auto-implemented property
+        public string AutoProperty { get; set; }
+
         //List doesn't have a fixed size like an array. 
         private List<float> grades;
+
     }
 }

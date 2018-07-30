@@ -95,7 +95,8 @@ namespace Grades.Tests.Types
             GradeBook g1 = new GradeBook();
             GradeBook g2 = g1;
 
-            g1.Name = "Scott's grade book";
+            g1.Name = "Eric's grade book";
+            g2.Name = "Eric's grade book";
             Assert.AreEqual(g1.Name, g2.Name);
         }
     }
