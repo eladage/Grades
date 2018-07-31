@@ -19,7 +19,7 @@ namespace Grades
             SaveGrades(book);
             WriteResults(book);
 
-            Console.WriteLine("...Press Enter to end program.");
+            Console.WriteLine("\nPress Enter to end program...");
             Console.ReadLine();
 
         }
@@ -33,10 +33,10 @@ namespace Grades
         {
             GradeStatistics stats = book.ComputeStatistics();
 
-            foreach (float grade in book)
-            {
-                Console.WriteLine(grade);
-            }
+            //foreach (float grade in book)
+            //{
+            //    Console.WriteLine(grade);
+            //}
 
             Console.WriteLine($"GradeBook:\t{book.Name}");
             WriteResult("Average\t", stats.AverageGrade);
@@ -56,9 +56,34 @@ namespace Grades
 
         private static void AddGrades(IGradeTracker book)
         {
-            book.AddGrade(91);
-            book.AddGrade(89.5f);
-            book.AddGrade(75);
+            Console.WriteLine("\nHow many grades do you want to add?:");
+            string input = Console.ReadLine();
+            if (Int32.TryParse(input, out int num))
+            {
+                /* Yes input could be parsed and we can now use number in this code block 
+                   scope */
+                for (int i = 0; i < Convert.ToInt32(input); i++)
+                {
+                    Add:
+                    Console.Write("Enter grade " + (i+1) + ": ");
+                    string gradeInput = Console.ReadLine();
+                    
+                    if (float.TryParse(gradeInput, out float gradeAddition))
+                    {
+                        book.AddGrade(gradeAddition);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not a valid number, please try again.");
+                        goto Add;
+                    }
+                }
+            }
+            else
+            {
+                /* No, input could not be parsed to an integer */
+                AddGrades(book);
+            }
         }
 
         private static void GetBookName(IGradeTracker book)
@@ -78,7 +103,7 @@ namespace Grades
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Something is screwed");
+                Console.WriteLine("Something is screwed - " + ex.Message);
             }
         }
 

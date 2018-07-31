@@ -11,8 +11,8 @@ namespace Grades
         public override GradeStatistics ComputeStatistics()
         {
 
-            Console.WriteLine("ThrowAwayGradeBook::ComputeStatistics");
-
+            Console.WriteLine($"\nThrowing away lowest grade in {this.Name}");
+        
             float lowest = float.MaxValue;
 
             if (grades.Count > 1)

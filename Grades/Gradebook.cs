@@ -19,7 +19,6 @@ namespace Grades
         public override GradeStatistics ComputeStatistics()
         {
             GradeStatistics stats = new GradeStatistics();
-            Console.WriteLine("GradeBook::ComputeStatistics");
 
             float sum = 0;
             foreach (float grade in grades)
