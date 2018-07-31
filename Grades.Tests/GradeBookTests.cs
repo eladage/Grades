@@ -44,5 +44,32 @@ namespace Grades.Tests
             GradeStatistics result = book.ComputeStatistics();
             Assert.AreEqual(85.16, result.AverageGrade, 0.01);
         }
+
+        [TestMethod]
+        public void LetterGradeAccuracy()
+        {
+            GradeBook book = new GradeBook();
+            book.AddGrade(100);
+
+            GradeStatistics result = book.ComputeStatistics();
+            Assert.AreEqual(result.LetterGrade, "A");
+            
+            book.AddGrade(75);
+            result = book.ComputeStatistics();
+            Assert.AreEqual(result.LetterGrade, "B");
+
+            book.AddGrade(50);
+            result = book.ComputeStatistics();
+            Assert.AreEqual(result.LetterGrade, "C");
+
+            book.AddGrade(50);
+            result = book.ComputeStatistics();
+            Assert.AreEqual(result.LetterGrade, "D");
+
+            book.AddGrade(0);
+            result = book.ComputeStatistics();
+            Assert.AreEqual(result.LetterGrade, "F");
+
+        }
     }
 }
