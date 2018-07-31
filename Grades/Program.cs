@@ -19,6 +19,9 @@ namespace Grades
             SaveGrades(book);
             WriteResults(book);
 
+            Console.WriteLine("...Press Enter to end program.");
+            Console.ReadLine();
+
         }
 
         private static IGradeTracker CreateGradeBook()
